@@ -1,0 +1,4 @@
+Шинээр VPC үүсгэхэд цуг үүссэн 3 зүйл
+- Route table
+- ACL
+- Security group

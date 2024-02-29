@@ -40,7 +40,7 @@ Server-үүд болон NAT gateway устгаарай. Мөн Elastic IP ус�
 
 ## Ажил 3 - VPC endpoint: Private deer asaana, S3, IAM role, Route table, default region
 
-Дараагийн хичээл дээр цуг хийе.
+- VPC endpoint: Private deer asaana, S3, IAM role, Route table, default region
 
 # Нэмэлт материалууд
 - https://aws.amazon.com/rds/faqs/

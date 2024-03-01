@@ -4,7 +4,102 @@
 
 ## Ажил 1 - IAM
 
-Хичээлийн слайд дээр байгаа.
+## Ажил 1 - IAM, User, Group
+
+1. admin, user1, user2, user3 гэсэн 4  User үүсгэнэ
+2.  S3-Support, EC2-Support, EC2-Admin гэсэн 3  User group үүсгэнэ.
+3.  admin хэрэглэгчид Administrator permission policy өгнө.
+4.  User Group тус бүрт дараах эрхүүдийг өгнө:
+
+    1.  S3-Support -> AmazonS3ReadOnlyAccess
+    2.  EC2-Support -> AmazonEC2ReadOnlyAccess
+    3.  EC2-Admin -> Шинэ custom policy үүсгэж дараах эрхийг олгоно. [https://gist.github.com/Ganjiguur/7d5c95448ba21abb88ca6c3d76bf82bb](https://gist.github.com/Ganjiguur/7d5c95448ba21abb88ca6c3d76bf82bb)
+
+		       {
+		        "Version": "2012-10-17",
+		        "Statement": [
+		            {
+		                "Action": "ec2:*",
+		                "Effect": "Allow",
+		                "Resource": "*"
+		            },
+		            {
+		                "Effect": "Allow",
+		                "Action": "elasticloadbalancing:*",
+		                "Resource": "*"
+		            },
+		            {
+		                "Effect": "Allow",
+		                "Action": "cloudwatch:*",
+		                "Resource": "*"
+		            },
+		            {
+		                "Effect": "Allow",
+		                "Action": "autoscaling:*",
+		                "Resource": "*"
+		            },
+		            {
+		                "Effect": "Allow",
+		                "Action": "iam:CreateServiceLinkedRole",
+		                "Resource": "*",
+		                "Condition": {
+		                    "StringEquals": {
+		                        "iam:AWSServiceName": [
+		                            "autoscaling.amazonaws.com",
+		                            "ec2scheduled.amazonaws.com",
+		                            "elasticloadbalancing.amazonaws.com",
+		                            "spot.amazonaws.com",
+		                            "spotfleet.amazonaws.com",
+		                            "transitgateway.amazonaws.com"
+		                        ]
+		                    }
+		                }
+		            }
+		        ]
+		    }
+
+ 5.  Үүсгэсэн хэрэглэгчдийг тус тусын групп лүү оруулна:
+    
+|User     |In Group          |Permissions               |
+|---------|-----------------|----------------------------------------------------|
+|user-1  |S3-Support     |Read-Only access to Amazon S3                    |
+|user-2  |EC2-Support  |Read-Only access to Amazon EC2                  |
+|user-3  |EC-Admin       |View, Start and Stop Amazon EC2 instances |
+
+6. Admin хэрэглэгчээр нэвтэрч S3 bucket болон EC2 micro хэмжээтэй сервер үүсгэнэ.
+
+7. user1-ээр нэвтэрч ороод:
+
+		а. S3 цэс рүү орж үзнэ. Үйлдэл хийнэ (Шинэ bucket үүсгэх г.м.)
+
+		b. EC2 цэс рүү орж үзнэ. Үйлдэл хийнэ (Шинэ server үүсгэх г.м.)
+
+8. user2-р нэвтэрч ороод:
+
+		а. S3 цэс рүү орж үзнэ. Үйлдэл хийнэ (Шинэ bucket үүсгэх г.м.)
+
+		b. EC2 цэс рүү орж үзнэ. Үйлдэл хийнэ (Шинэ server үүсгэх г.м.)
+
+		c. Server унтраах гэж оролд
+
+9. user3-р нэвтэрч ороод:
+
+		а. S3 цэс рүү орж үзнэ. Үйлдэл хийнэ (Шинэ bucket үүсгэх г.м.)
+
+		b. EC2 цэс рүү орж үзнэ. Үйлдэл хийнэ (Шинэ server үүсгэх г.м.)
+
+		c. Server унтраах гэж оролд
+
+10. Admin-аар ороод User group permission-г өөрчлөөд үз.
+
+11. 6, 7, 8 дээр бичигдсэн үйлдлүүдийг давтаж хий.
+
+12. Үүсгэсэн бүх resource-уудаа цэвэрлэх.
+
+		1.  Users
+		2.  User-groups   
+		3.  S3 bucket
+		4.  EC2 server
 
 
 ## Ажил 2 - Billing alarm

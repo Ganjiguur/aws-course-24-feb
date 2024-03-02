@@ -1,34 +1,18 @@
-FROM ubuntu:18.04
+# Use the official PHP image with Apache
+FROM php:7.4-apache
 
-ENV TZ 'Asia/Ulaanbaatar'
+# Install mysqli extension
+RUN docker-php-ext-install mysqli
 
-RUN apt update && \
-  apt install -y software-properties-common && \
-  add-apt-repository ppa:ondrej/php && \
-  apt update -y && \
-  echo $TZ > /etc/timezone && \
-  apt update && apt install -y tzdata && \
-  rm /etc/localtime && \
-  ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
-  dpkg-reconfigure -f noninteractive tzdata && \
-  apt clean
+# Copy the application files to the container
+COPY . /var/www/html
 
-RUN apt install -y git \
-  vim \
-  unzip \
-  graphviz \
-  aspell \
-  ghostscript \
-  clamav \
-  curl \
-  apache2 \
-  php7.4 \
-  php7.4-mysqli \
-  php7.4-json && \
-  apt autoremove -y
+# Expose port 8080
+EXPOSE 8080
 
-RUN rm -rf /var/www/html
+# Configure Apache to listen on port 8080 and set ServerName
+RUN sed -i 's/80/8080/g' /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf && \
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-COPY index.php /var/www/html/
-
-CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
+# Start Apache in the foreground
+CMD ["apache2-foreground"]

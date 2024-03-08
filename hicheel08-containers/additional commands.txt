@@ -1,0 +1,72 @@
+DOCKER сурсан зүйлс
+1. `docker-machine` 
+Энэ нь нэг төрлийн Tool юм байна. Windows эсвэл Mac дээр docker ажиллуулах. Эсвэл нэг цэгээс олон Docker host-уудыг удирдахад зориулагдсан. Энийг бас сайн судалвал олон газар docker deploy хийхгүй нэг газраас хийх боломжтой юм байна. Learn more: https://docs.docker.com/machine/overview/
+2. `--rm`
+docker run хийхдээ энийг нэмж бичвэл container stop хийхдээ устгагдана гэсэн үг. Нэг удаа ажиллуулах шаардлагатай container асаахад ашиглана. Дараа нь цэвэрлэх шаардлагагүй гэсэн үг.
+3. `docker logs -f <contaierID>`
+Log tail буюу Real-time log-ийг харна гэсэн үг. Шинээр лог бичигдвэл шууд дэлгэцэнд гарч ирээд явна.
+4. `docker stats`
+Container тус бүрийн системийн мэдээллийг харна. Илүү нарийн зүйлсүүд энд бас байгаа байх.
+5. `docker run -p 5000`
+`-p 5000:5000` гэж 2 порт бичихгүй 1 порт бичихээр (Container доторх EXPOSE хийсэн порт байна) host machine дээрээ random порт холбож өгдөг. Дээрхий командын үр дүнд `32546:5000` иймэрхүү үр дүн гарна. Load balancing хийх scale-out хийхэд порт давхцалыг шийдэхэд хэрэгтэй байдаг.
+6. `--restart on-failure`
+Docker run хийхэд ингэж хийвэл байнгын асаалттай container гэж ойлгож болно. Систем тэр чигтээ рестарт хийхэд Docker service асахдаа ийм container-уудыг зэрэг асаана гэсэн үг.
+7. `docker inspect <containerID>`
+Container-ийн талаарх бүх мэдээллийг авна
+8. Docker networks
+`docker network ls` - Docker-ийн сүлжээний мэдээллийг харуулна
+`bridge` гэдэг нь үндсэн сүлжээ. Default `bridge` interface нь host machine дээрх `docker0` interface байдаг
+`docker network inspect <networkName>` - Тухайн сүлжээний мэдээллийг харна. Үүн дээр ямар2 container ажиллаж байна гэдэг ч юмуу.
+9. `docker exec`
+Хараар тайлбарлахад Container дээр команд ажиллуулах гэсэн үг. 
+`docker exec <containerName or ID>` ping 8.8.8.8 - тухайн Container дотроос ping шидэх
+`docker exec -it <containerName or ID> bash` - тухайн Container-ийн bash-ийг ажиллуулах
+10. Alpine image
+alpine image хамгийн минимал нь тул нэмж util-ууд суулгах шаардлагатай байдаг. Жишээ нь Dockerfile дотор `RUN apk update && apk add iputils` энийг нэмж ping, ifconfig этр ажиллуулдаг болгох ч юмуу. Ер нь alpine image дээр хэрэгтэй util, feature-үүдээ нэмж суулгах нь best optimized image болдог. Ер нь ингэснээр 250% хүртэл improve хийдэг гэж байна.
+11. `containerID` = 'hostname'
+Тухайн машиний hostname нь containerID байдаг. DNS нтр чиглүүлэх бол containerID хэрэгтэй. Нөгөөтэйгүүр scale хийсэн container-уудаа ялгая гэвэл App дотроосоо Hostname-г Print хийхэд хангалттай.
+12. `docker network create --driver bridge <networkName>`
+Шинэ network үүсгэх команд. `docker run .... --net <networkName> ....` ингэснээр тухайн container нь энэ шинэ Network дотор ажиллах бөгөөд ингэхгүй бол Default network bridge дээр ажиллана. Шинээр үүсгэсэн network дотор үүсгэх ямар давуу талтай вэ гэвэл container-ууд хоорондоо шууд Container-ийн нэрээр нэгнийгээ resolve хийх олох боломжтой. Жишээ нь: App container доторх код дотор `redis:6379` гээд хаяг зааж өгөхгүйгээр redis гэсэн нэртэй container-ийг олно гэсэн үг.
+13. `docker volume create <volumeName>`
+docker-ийн virtual volume үүсгэнэ. Энэний hostpath нь `/var/lib/docker/volumes/repo/_data` байдаг. Persistent data хадгалахад ашиглана.
+Docker run хийхдээ `-v <volumeName>:/data centos` тухайн үүсгэсэн volume-аа container доторх volume-тай mount хийж өгч байна гэсэн үг. Docker volume биш зүгээр host machine дээрх directory-г мөн mount хийж өгч болох ба `-v /mydir:/data centos` гэж өгч болно. Жишээлбэл redis асахдаа заавал гадны volume mount хийж өгөх шаардлагатай ба Redis автоматаар 30 секунд тутам RAM дээрх датагаа container доторх `/data` хавтас дотор буюу манай mount хийсэн volume эсвэл directory луу бичнэ гэсэн үг. Унтраад асахад тэндээсээ дата load хийнэ. Мөн `redis-cli > SAVE' командаар файл руу бичдэг.
+14. `.env' file vs `environments`
+Docker асаахдаа `-e` гэж байгаад environment-ууд оруулдаг билээ. Тэгвэл `.env` file дотор тэд нарыгаа бичээд `env_file` гэсэн `docker-compose.yml` дээр оруулна. Эсвэл `.env` файлгүйгээр `environments` гэсэн хэсэгт жагсаагаад бичиж болно. Энэ маш хэрэгтэй зүйл бөгөөд ENV ашиглаж хэрэгтэй гэдэг юм байна лээ.
+15. `docker system df`
+Бүх container болон дискүүдийн жагсаалтыг харах. `docker system df -v` Verbose буюу илүү detail-ний хардаг
+16. Dangling image
+unused буюу ямар ч tag нтр байхгүй `none` гэсэн image-ийг хэлнэ. Хаа таарсан газар нь устгахад ямар ч буруу байхгүй.
+17. `docker system info`
+like `docker info` систем дээр суусан docker engine-ийн талаах мэдээллийг авна. Docker swarm гэх мэт...
+18. `docker system prune`
+Хэрэглэхгүй байгаа бүх disk, container, image, network-уудийг цэвэрлэнэ. `-f` `-a` нтр гээд нэмэлт option-ууд байдаг. Cronjob дээр тохируулвал их зүгээр байдаг гэнэ шүү.
+19. `VOLUME`
+Dockerfile дотор `VOLUME ["/app/public"]` гэж оруулбал тухайн container доторх `/app/public` directory-г гадагшаа expose хийж байна гэсэн үг. Өөр container асаахдаа `--volumes-from <Нөгөө expose хийсэн container>` гээд асаавал тэр directory шууд ороод ирнэ.
+Dockerfile дотор `VOLUME` гэж expose хийхгүйгээр docker run хийхдээ `-v /app/public` (2 цэг байхгүй) бичвэл ижил үр дүн гарна.
+20. `.dockerignore` 
+`.gitignore`-тэй ижилхэн. ADD COPY үйлдэл хийхэд ignore хийнэ л гэсэн үг.
+```
+*
+!Dockerfile
+.git
+**/*.swp 
+**/*.txt 
+!special.txt #means allow only special.txt
+```
+21. Docker-жуулж байвал дараах 4 зүйлсийг заавал хэрэгжүүл гэж үздэг юм байна.
+```
+Dockerfile
+.dockerignore
+docker-compose.yml
+.env
+```
+22. `ENTRYPOINT`
+Container асахад хэд хэдэн мөр команд ажиллуулахад зориулгадсан. `.sh` файл дотроо shell script бичээд хамгийн сүүлд `exec "$@"` гэж оруулдаг. Энэ нь дээрх командуудыг нэг дор ажилуул гэсэн утгатай. Shebang line `#!/bin/sh ` ингэж оруулна. Alpine дээр `bash` дэмждэггүй
+23. `ADD` vs `COPY`
+2-уулаа ижилхэн <src>, <dest> бичиж файл хуулдаг. `ADD` нь file download хийх боломжтой мөн түгээмэл compress format (`*.tar.gz` etc...) файлуудыг extract хийдэг байна. 
+24. 'RUN' vs `CMD`
+RUN - when image builds
+CMD - when container starts. Хамгийн сүүлийн CMD ажилладаг. Тэхдээ эдгээрийн нарийн юмнууд зөндөө байдаг.
+25. container time
+-v /etc/localtime:/etc/localtime \
+-v /etc/timezone:/etc/timezone \

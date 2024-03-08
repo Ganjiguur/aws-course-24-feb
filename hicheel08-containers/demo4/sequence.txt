@@ -1,0 +1,10 @@
+1. create bucket
+2. set bucket policy
+3. create gitlab repo
+4. init repo on the local
+5. create cloudfront distribution
+6. Create IAM user with Cloudfront & S3 access
+7. Replace variables on the gitlab
+8. push
+
+branch-aa haraarai

@@ -1,0 +1,24 @@
+docker info # check swarm activated
+
+docker swarm init --advertise-addr <ip-addr>  # Init docker swarm
+# Then docker swarm join
+
+docker service ls # list of all services
+docker service ps <servicename> # List task of the service
+docker service create --name <servicename> <imagename> # new service
+docker service rm <servicename> # service remove
+docker swarm leave # if manager add *--force* 
+
+docker node ls # list of nodes
+docker node ps # list nodes in services
+docker node rm <nodeid>
+
+docker node inspect <nodeid> --pretty # node-info
+
+docker stack deploy -c docker-stack.yml gottalent ## multiple service
+
+docker service scale {service_name}=7
+
+docker node update --availability drain manager 
+
+docker service update --image ganjiguur/goapp:v2 GoApp

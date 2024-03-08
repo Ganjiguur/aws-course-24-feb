@@ -1,0 +1,92 @@
+version: "3"
+services:
+
+  redis:
+    image: redis:3.2-alpine
+    networks:
+      - front-tier
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+  db:
+    image: postgres:9.4
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - back-tier
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+  vote:
+    image: ganjiguur/voting_vote
+    ports:
+      - 5000:80
+    networks:
+      - front-tier
+    depends_on:
+      - redis
+    deploy:
+      replicas: 5
+      update_config:
+        parallelism: 2
+      restart_policy:
+        condition: on-failure
+
+  result:
+    image: ganjiguur/voting_result
+    ports:
+      - 5001:80
+    networks:
+      - back-tier
+    depends_on:
+      - db
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+
+  worker:
+    image: ganjiguur/voting_worker
+    networks:
+      - back-tier
+      - front-tier
+    deploy:
+      mode: replicated
+      replicas: 2
+      labels: [APP=VOTING]
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.role == manager]
+
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    stop_grace_period: 1m30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  front-tier:
+  back-tier:
+
+volumes:
+  db-data:

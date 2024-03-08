@@ -1,1 +1,6 @@
-demo 3 project-g  AWS repo esvel docker hub deer taviad CI/CD bichij boloh yum
+Demo 3-g ECS deer asaa
+
+https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
+apt install unzip -y
+
+

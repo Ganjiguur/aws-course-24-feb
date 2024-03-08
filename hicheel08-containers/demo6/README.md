@@ -1,18 +1,35 @@
-demo 5 дээр хийсэн images-ээ docker hub ruu push hii
+on master
+
+`docker swarm init`
+
+Security group - Allow all trafic!
+
+other nodes
+`docker swarm join ......`
 
 
-Docker hub push
-```
-docker login --username=yourhubusername --email=youremail@company.com
-docker images
-docker tag bb38976d03cf yourhubusername/verse_gapminder:firsttry
-sudo docker push yourhubusername/verse_gapminder:v1
 
-```
+
 
 ##Docker stack  
 `docker-stack.yml`  
 `docker stack deploy -c docker-stack.yml gottalent`
+
+```
+docker service ls # list of all services
+docker service ps <servicename> # List task of the service
+docker service create <servicename> <imagename> # shine service uusgeh
+docker service rm <servicename> # service ustgah
+docker service scale <servicename>=6 # service-g scale hiih
+docker swarm leave # swarm-s garah hervee manager garah bol *--force* gej nemne
+
+docker node ls # list of nodes
+docker node ps # list nodes in services
+docker node rm <nodeid>
+
+docker node inspect <nodeid> --pretty # node-info
+
+```
 
 ![Architecture diagram](https://s3-ap-southeast-1.amazonaws.com/fibo-resources/cluster.png)
 vote - 5  

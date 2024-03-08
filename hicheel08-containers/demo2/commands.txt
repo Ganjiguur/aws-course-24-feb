@@ -1,7 +1,1 @@
 docker run -dt --name myweb -p 8080:80 -v "$PWD":/usr/local/apache2/htdocs/ httpd
-
-for windows
-@echo %cd%
-pwd
-docker run -dt --name myweb -p 8080:80 -v {replace directory here}:/usr/local/apache2/htdocs/ httpd
-docker run -dt --name myweb -p $PWD:/usr/local/apache2/htdocs/ httpd

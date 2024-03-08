@@ -1,3 +1,5 @@
+# Build CI/CD on gitlab
+
 1. create bucket
 2. set bucket policy
 3. create gitlab repo

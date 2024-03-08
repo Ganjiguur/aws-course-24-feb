@@ -1,2 +1,4 @@
+#Build your own docker and run command
+
 docker build -t flask .
 docker run -dt -p 8001:5000 flask

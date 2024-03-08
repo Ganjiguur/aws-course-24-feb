@@ -1,2 +1,4 @@
+# restart always command
+
 docker build -t go3 .
 docker run -dt -p 8082:80 --restart always go3

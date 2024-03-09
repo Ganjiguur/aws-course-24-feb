@@ -1,0 +1,8 @@
+{
+    "Template": {
+        "TemplateName": "my-template",
+        "SubjectPart": "{{subject}}",
+        "HtmlPart": "<html>\r\n    <h1>Hi my name is: {{senderName}},<\/h1>\r\n    <p>I am contacting for {{message}}.<\/p>\r\n<\/html>",
+        "TextPart": "Hi my name is: {{senderName}}, \r\n I am contacting for {{message}}."
+    }
+}

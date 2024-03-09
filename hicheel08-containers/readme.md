@@ -1,3 +1,6 @@
+Хичээлийн линк - https://youtu.be/L1GHpJ6MrMs
+
+
 # Даалгавар
 
 Ubuntu 22 - EC2 

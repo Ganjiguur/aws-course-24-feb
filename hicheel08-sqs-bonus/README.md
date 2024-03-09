@@ -1,6 +1,5 @@
 
-# Homework 10 - SQS, SNS, Node JS
-Үзэх https://youtu.be/D9OCERhtPmA
+# Homework bonus - SQS, SNS, Node JS
 
 ### SQS ашиглан имэйл илгээгч бүтээх жишээ
 - AWS Lambda

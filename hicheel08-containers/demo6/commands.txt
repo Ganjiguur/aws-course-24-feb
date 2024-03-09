@@ -1,24 +1,48 @@
-docker info # check swarm activated
+## prepare 3 servers. 1 master , 2 workers
 
-docker swarm init --advertise-addr <ip-addr>  # Init docker swarm
-# Then docker swarm join
+`docker info # check swarm activated`
+
+1. `docker swarm init` - zuvhun manager deer
+2. busad 2 worker tus burtee orj baigaad garch irsen commandiig unshuulna. `docker swarm join --- ` geed tokentoi baigaa
+3. Manager deer `docker stack deploy -c docker-stack.yml demo6`
+4. doorh commanduudiig tursh
+```
+docker node ls # list of nodes
+docker node ps # list nodes in services
 
 docker service ls # list of all services
 docker service ps <servicename> # List task of the service
-docker service create --name <servicename> <imagename> # new service
-docker service rm <servicename> # service remove
-docker swarm leave # if manager add *--force* 
-
-docker node ls # list of nodes
-docker node ps # list nodes in services
-docker node rm <nodeid>
 
 docker node inspect <nodeid> --pretty # node-info
 
-docker stack deploy -c docker-stack.yml gottalent ## multiple service
-
 docker service scale {service_name}=7
-
+``` 
+5. Optional commands - Hiij bolohgui!
+```
+docker node rm <nodeid>
 docker node update --availability drain manager 
+docker service update --image {image_name} {sevice_name}
+```
 
-docker service update --image ganjiguur/goapp:v2 GoApp
+6. Buh node deer ijilhen port deer service uud ajillaj baigaa esehiig shalgah
+
+7. Service tus buriig domain-tai bolgo
+
+3 shirheg target group
+`vote - 5000 port` - add 3 servers
+`result - 5001 port` - add 3 servers
+`visualizer - 8080` - add 3 servers
+
+Route 53 deer
+
+`visualizer.domain.com -> LB`
+`result.domain.com -> LB`
+`vote.domain.com -> LB`
+ 
+ LB deer domain based route:
+ 
+ `visualizer.domain.com -> TG:8080`
+`result.domain.com -> TG:5001`
+`vote.domain.com -> TG:5000`
+
+8. `docker stack rm demo6`

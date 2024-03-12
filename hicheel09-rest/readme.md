@@ -1,4 +1,4 @@
-Хичээлийн бичлэг - https://youtu.be/MPzFrC1fK-Q
+Хичээлийн бичлэг - https://youtu.be/9TaE7dG94Jw
 
 
 - Ubuntu 18 системтэй micro server үүсгэнэ
